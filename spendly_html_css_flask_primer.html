@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spendly — HTML, CSS & Flask Primer</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f9f9f9; color: #1a1a1a; padding: 2rem; }
+
+.nav { display: flex; gap: 8px; padding: 1rem 0 1.5rem; flex-wrap: wrap; }
+.tab { padding: 6px 16px; border-radius: 20px; border: 1px solid #ccc; font-size: 13px; cursor: pointer; background: transparent; color: #555; transition: all 0.15s; }
+.tab.active { background: #1a1a1a; color: #fff; border-color: transparent; }
+.tab:hover { border-color: #999; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+.topic { margin-bottom: 1.5rem; }
+.topic-title { font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; padding-bottom: 6px; border-bottom: 1px solid #eee; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 10px; }
+.card { background: #fff; border: 1px solid #eee; border-radius: 12px; padding: 12px 14px; }
+.card-label { font-size: 11px; font-weight: 600; color: #aaa; margin-bottom: 4px; }
+.card-code { font-family: monospace; font-size: 12px; color: #1a1a1a; margin-bottom: 6px; background: #f5f5f5; padding: 6px 8px; border-radius: 6px; white-space: pre; overflow-x: auto; }
+.card-desc { font-size: 12px; color: #555; line-height: 1.5; }
+.card-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-top: 6px; }
+.tag-spendly { background: #e8f0fe; color: #1a56db; }
+
+.rule-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.rule-code { font-family: monospace; font-size: 12px; background: #f5f5f5; padding: 8px 10px; border-radius: 6px; flex: 1; color: #1a1a1a; white-space: pre; overflow-x: auto; }
+.rule-arrow { color: #aaa; font-size: 14px; padding-top: 8px; }
+.rule-result { font-size: 12px; color: #555; flex: 1; padding-top: 8px; line-height: 1.5; }
+
+.flow { display: flex; flex-direction: column; gap: 6px; }
+.flow-step { display: flex; align-items: center; gap: 10px; }
+.flow-num { width: 22px; height: 22px; border-radius: 50%; background: #f0f0f0; border: 1px solid #ddd; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; color: #555; flex-shrink: 0; }
+.flow-text { font-size: 13px; color: #1a1a1a; }
+.flow-code { font-family: monospace; font-size: 11px; color: #888; }
+.flow-line { width: 1px; height: 14px; background: #ddd; margin-left: 11px; }
+
+.pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-family: monospace; }
+.pill-html { background: #FAEEDA; color: #633806; }
+.pill-css { background: #E6F1FB; color: #0C447C; }
+.pill-flask { background: #EAF3DE; color: #27500A; }
+
+code { font-family: monospace; font-size: 11px; background: #f0f0f0; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<h1 style="font-size: 20px; font-weight: 600; margin-bottom: 4px;">Spendly — HTML, CSS & Flask Primer</h1>
+<p style="font-size: 13px; color: #888; margin-bottom: 0;">Quick reference tied directly to your project files.</p>
+
+<div class="nav">
+  <button class="tab active" onclick="show('html', this)">HTML</button>
+  <button class="tab" onclick="show('css', this)">CSS</button>
+  <button class="tab" onclick="show('flask', this)">Flask</button>
+  <button class="tab" onclick="show('together', this)">How they connect</button>
+</div>
+
+<!-- HTML -->
+<div id="html" class="section active">
+
+  <div class="topic">
+    <div class="topic-title">What HTML actually is</div>
+    <div style="font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 1rem;">
+      HTML is just labels. You wrap content in tags and the browser knows what to do with it. Every tag has an opening <code>&lt;tag&gt;</code> and a closing <code>&lt;/tag&gt;</code>.
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">&lt;h1&gt;Spendly&lt;/h1&gt;</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Big bold heading</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">&lt;p&gt;Track your money&lt;/p&gt;</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">A paragraph of text</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">&lt;a href="/login"&gt;Login&lt;/a&gt;</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">A clickable link to /login</div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">Tags you'll use in Spendly</div>
+    <div class="cards" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="card">
+        <div class="card-label">Structure</div>
+        <div class="card-code">&lt;div&gt;&lt;/div&gt;</div>
+        <div class="card-desc">A generic box. Wrap anything in it to group or style.</div>
+        <span class="card-tag tag-spendly">used in all pages</span>
+      </div>
+      <div class="card">
+        <div class="card-label">Headings</div>
+        <div class="card-code">&lt;h1&gt; → &lt;h6&gt;</div>
+        <div class="card-desc">h1 is biggest, h6 smallest. Use h1 once per page.</div>
+        <span class="card-tag tag-spendly">landing.html</span>
+      </div>
+      <div class="card">
+        <div class="card-label">Form wrapper</div>
+        <div class="card-code">&lt;form method="POST"
+  action="/login"&gt;
+&lt;/form&gt;</div>
+        <div class="card-desc">Wraps all login/register inputs. POST sends data to Flask.</div>
+        <span class="card-tag tag-spendly">login.html, register.html</span>
+      </div>
+      <div class="card">
+        <div class="card-label">Input fields</div>
+        <div class="card-code">&lt;input type="email"
+  name="email"&gt;
+&lt;input type="password"
+  name="password"&gt;</div>
+        <div class="card-desc">The actual text boxes. <code>name</code> is how Flask reads it.</div>
+        <span class="card-tag tag-spendly">login.html, register.html</span>
+      </div>
+      <div class="card">
+        <div class="card-label">Button</div>
+        <div class="card-code">&lt;button type="submit"&gt;
+  Login
+&lt;/button&gt;</div>
+        <div class="card-desc">Submits the form to Flask when clicked.</div>
+        <span class="card-tag tag-spendly">login.html, register.html</span>
+      </div>
+      <div class="card">
+        <div class="card-label">Link</div>
+        <div class="card-code">&lt;a href="/register"&gt;
+  Sign up
+&lt;/a&gt;</div>
+        <div class="card-desc">Navigates to another page. href is the URL path.</div>
+        <span class="card-tag tag-spendly">login.html</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">Jinja2 — Flask's HTML superpower</div>
+    <div style="font-size: 13px; color: #555; margin-bottom: 10px;">Flask adds special syntax to your HTML. Two things to know:</div>
+    <div class="rule-row">
+      <div class="rule-code">{{ variable }}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Print a value from Python. e.g. <code>{{ name }}</code> becomes "Alex"</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">{% block content %}
+{% endblock %}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">A slot in base.html. Child pages fill this in.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">{% extends "base.html" %}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">First line in login.html, register.html. Inherits the layout.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">{{ url_for('static',
+  filename='css/style.css') }}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">The right way to link your CSS file in Flask.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CSS -->
+<div id="css" class="section">
+
+  <div class="topic">
+    <div class="topic-title">What CSS actually is</div>
+    <div style="font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 1rem;">
+      CSS = selector + property + value. You pick an element, then tell it how to look.
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">h1 {
+  color: blue;
+  font-size: 32px;
+}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Every h1 on the page becomes blue, 32px.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">.card {
+  background: white;
+  padding: 20px;
+}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Any element with class="card" gets a white bg + padding.</div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">Selectors — how to target elements</div>
+    <div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card">
+        <div class="card-label">Tag</div>
+        <div class="card-code">h1 { }
+button { }
+input { }</div>
+        <div class="card-desc">Targets all elements of that type.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Class (most common)</div>
+        <div class="card-code">.login-card { }
+.btn { }</div>
+        <div class="card-desc">Targets elements with that class. In HTML: <code>class="login-card"</code></div>
+      </div>
+      <div class="card">
+        <div class="card-label">ID (use sparingly)</div>
+        <div class="card-code">#navbar { }
+#submit { }</div>
+        <div class="card-desc">Targets one specific element. In HTML: <code>id="navbar"</code></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">The box model — every element is a box</div>
+    <div style="display:flex; justify-content:center; margin-bottom: 1rem;">
+      <div style="text-align:center;">
+        <div style="background:#FAEEDA; border:2px solid #BA7517; border-radius:8px; padding:16px; font-size:12px; color:#633806;">
+          <div style="background:#E6F1FB; border:2px solid #185FA5; border-radius:6px; padding:14px; color:#0C447C; font-size:12px;">
+            <div style="background:#EAF3DE; border:2px solid #3B6D11; border-radius:4px; padding:12px; color:#27500A; font-size:12px;">content</div>
+            <div style="font-size:11px; margin-top:4px;">padding (inside space)</div>
+          </div>
+          <div style="font-size:11px; margin-top:4px;">border</div>
+        </div>
+        <div style="font-size:11px; margin-top:4px; color:#888;">margin (outside space)</div>
+      </div>
+    </div>
+    <div class="cards" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="card">
+        <div class="card-label">Padding vs Margin</div>
+        <div class="card-code">padding: 20px;  /* inside */
+margin: 20px;   /* outside */</div>
+        <div class="card-desc">Padding = space inside the box. Margin = space around the box.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Border</div>
+        <div class="card-code">border: 1px solid #ddd;
+border-radius: 8px;</div>
+        <div class="card-desc">border-radius makes corners round. Useful for login cards.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">Flexbox — centering things in Spendly</div>
+    <div class="rule-row">
+      <div class="rule-code">body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Centers any child element (like login card) both horizontally and vertically on the full page.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">nav {
+  display: flex;
+  justify-content: space-between;
+}</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Logo on the left, links on the right. Classic navbar layout.</div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">Properties you'll use in style.css</div>
+    <div class="cards" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="card">
+        <div class="card-label">Colors</div>
+        <div class="card-code">color: #333;
+background-color: #f5f5f5;
+background: white;</div>
+        <div class="card-desc">color = text color. background = fill of the box.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Typography</div>
+        <div class="card-code">font-size: 16px;
+font-weight: bold;
+font-family: Arial;</div>
+        <div class="card-desc">Controls how text looks.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Sizing</div>
+        <div class="card-code">width: 400px;
+max-width: 100%;
+height: 48px;</div>
+        <div class="card-desc">max-width: 100% prevents elements from overflowing on small screens.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Cursor</div>
+        <div class="card-code">cursor: pointer;</div>
+        <div class="card-desc">Makes the mouse cursor a hand when hovering. Always add to buttons.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Flask -->
+<div id="flask" class="section">
+
+  <div class="topic">
+    <div class="topic-title">What Flask actually does</div>
+    <div style="font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 1rem;">
+      Flask listens for browser requests and runs a Python function in response. That function either returns HTML or redirects to another page.
+    </div>
+    <div class="flow">
+      <div class="flow-step"><div class="flow-num">1</div><div><div class="flow-text">User visits <code>/login</code></div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">2</div><div><div class="flow-text">Flask matches the URL to a route in <code>app.py</code></div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">3</div><div><div class="flow-text">The Python function runs</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">4</div><div><div class="flow-text">Flask renders <code>login.html</code> and sends it back to the browser</div></div></div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">The anatomy of app.py</div>
+    <div class="rule-row">
+      <div class="rule-code">app = Flask(__name__)</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Creates the Flask app. Always line 1 (after imports).</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">@app.route("/login")</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Decorator. Tells Flask: run the next function when someone visits /login.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">def login():
+    return render_template(
+        "login.html"
+    )</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">The function Flask runs. render_template loads the HTML file.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">methods=["GET", "POST"]</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">GET = user just visits the page. POST = user submitted a form.</div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">GET vs POST</div>
+    <div class="cards" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="card">
+        <div class="card-label">GET request</div>
+        <div class="card-code">@app.route("/login")
+def login():
+    return render_template(
+        "login.html"
+    )</div>
+        <div class="card-desc">User just visits the URL. Flask shows the login page. Nothing submitted yet.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">POST request</div>
+        <div class="card-code">if request.method == "POST":
+    email = request.form["email"]
+    password = request.form["password"]</div>
+        <div class="card-desc">User clicked submit. Flask reads what they typed. request.form["name"] matches the input's name= in HTML.</div>
+        <span class="card-tag tag-spendly">this is how login.html sends to app.py</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">The 5 things you import in Spendly's app.py</div>
+    <div class="rule-row">
+      <div class="rule-code">from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    session
+)</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result" style="font-size:12px; line-height:1.8;">
+        <b style="font-weight:600;">Flask</b> — creates the app<br>
+        <b style="font-weight:600;">render_template</b> — loads HTML files<br>
+        <b style="font-weight:600;">request</b> — reads form data<br>
+        <b style="font-weight:600;">redirect</b> — sends user to another page<br>
+        <b style="font-weight:600;">session</b> — remembers who is logged in
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">redirect vs render_template</div>
+    <div class="cards" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="card">
+        <div class="card-label">render_template</div>
+        <div class="card-code">return render_template(
+    "login.html",
+    error="Wrong password"
+)</div>
+        <div class="card-desc">Loads and returns an HTML file. Can pass data to it.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">redirect</div>
+        <div class="card-code">return redirect("/dashboard")</div>
+        <div class="card-desc">Sends the browser to a completely different URL. Use after a successful login.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic">
+    <div class="topic-title">session — how Flask remembers the logged-in user</div>
+    <div class="rule-row">
+      <div class="rule-code">session["user_id"] = user["id"]</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Save the user's ID after login.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">if "user_id" not in session:
+    return redirect("/login")</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Protect a page. If not logged in, send them away.</div>
+    </div>
+    <div class="rule-row">
+      <div class="rule-code">session.clear()</div>
+      <div class="rule-arrow">→</div>
+      <div class="rule-result">Log the user out. Wipes the session.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- How they connect -->
+<div id="together" class="section">
+
+  <div class="topic">
+    <div class="topic-title">How a login works end to end in Spendly</div>
+    <div class="flow">
+      <div class="flow-step"><div class="flow-num">1</div><div><div class="flow-text">User visits <code>/login</code></div><div class="flow-code">Flask runs login() → renders login.html</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">2</div><div><div class="flow-text">Browser shows <code>login.html</code> styled by <code>style.css</code></div><div class="flow-code">HTML provides the form structure, CSS makes it look good</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">3</div><div><div class="flow-text">User types email + password, clicks submit</div><div class="flow-code">&lt;form method="POST" action="/login"&gt; sends data to Flask</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">4</div><div><div class="flow-text">Flask reads the form data</div><div class="flow-code">request.form["email"], request.form["password"]</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">5</div><div><div class="flow-text">db.py checks the database</div><div class="flow-code">get_user(email, password) → returns user or None</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">6</div><div><div class="flow-text">If valid → save session, redirect to dashboard</div><div class="flow-code">session["user_id"] = user["id"] → redirect("/dashboard")</div></div></div>
+      <div class="flow-line"></div>
+      <div class="flow-step"><div class="flow-num">7</div><div><div class="flow-text">If invalid → re-render login with error</div><div class="flow-code">render_template("login.html", error="Wrong credentials")</div></div></div>
+    </div>
+  </div>
+
+  <div class="topic" style="margin-top:1.5rem;">
+    <div class="topic-title">The three files and their job</div>
+    <div class="cards" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card">
+        <span class="pill pill-html">HTML</span>
+        <div class="card-desc" style="margin-top:8px; line-height:1.6;">Defines <b>structure</b>. What's on the page and in what order. Forms, buttons, text. No styling here.</div>
+      </div>
+      <div class="card">
+        <span class="pill pill-css">CSS</span>
+        <div class="card-desc" style="margin-top:8px; line-height:1.6;">Defines <b>appearance</b>. Colors, sizes, spacing, layout. No content here.</div>
+      </div>
+      <div class="card">
+        <span class="pill pill-flask">Flask</span>
+        <div class="card-desc" style="margin-top:8px; line-height:1.6;">Defines <b>behaviour</b>. What happens when a form is submitted. Reads data, talks to database, decides what page to show.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+
+</body>
+</html>
