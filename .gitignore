@@ -14,4 +14,4 @@ expense_tracker.db
 .env
 .DS_Store
 .claude/plans/
-docs/
+
