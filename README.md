@@ -1,3 +1,9 @@
+⚠️ **WARNING: This project is under development and not ready for production use.**
+
+> **Note**: This project is developed collaboratively by a human creator and Claude Code, combining strategic thinking with AI-assisted implementation.
+
+---
+
 # Finlo - Expense Tracker
 
 A modern web-based expense tracking application built with Flask, designed to help users manage their personal finances.
@@ -35,7 +41,10 @@ finlo/
 │   ├── base.html       # Master layout template
 │   ├── landing.html    # Homepage
 │   ├── login.html      # Login page
-│   └── register.html   # Registration page
+│   ├── register.html   # Registration page
+│   ├── settings.html   # User settings page
+│   ├── privacy.html    # Privacy policy page
+│   └── terms.html      # Terms of service page
 ├── static/             # Static assets
 │   ├── css/style.css   # Application styles
 │   └── js/main.js      # Client-side scripts
