@@ -55,12 +55,13 @@ git checkout -b <branch_name>
 
 ## Step 6 — Research the codebase
 Read these files before writing the spec:
-- `CLAUDE.md` — roadmap, conventions, schema
+- `CLAUDE.md` — conventions and schema (not status)
+- `README.md` — check completed steps
 - `app.py` — existing routes and structure
 - `database/db.py` — existing schema and functions
 - All files in `.claude/specs/` — avoid duplicating existing specs
 
-Check `CLAUDE.md` to confirm the requested step is not already
+Check `README.md` to confirm the requested step is not already
 marked complete. If it is, warn the user and stop.
 
 ## Step 7 — Write the spec

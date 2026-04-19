@@ -4,9 +4,7 @@
 
 This file provides guidance to Claude Code when working with **Finlo**, a personal expense tracker built with Flask and SQLite.
 
-**Status**: Under active development using a step-based implementation model (9 steps planned). See `.claude/specs/` for feature specifications.
-
-**Current Phase**: Steps 1-2 complete (database setup). Steps 3-9 in progress (authentication, profile, expenses CRUD).
+**Status**: Under active development. See README.md for project status and implemented features.
 
 ---
 
@@ -66,22 +64,6 @@ finlo/
 - **Dependency Manager**: `uv` only — not pip
 - **No new packages**: work within `pyproject.toml` as-is unless explicitly told otherwise
 - Python 3.14+ assumed — f-strings and `match` statements are fine
-
----
-
-## Step-Based Implementation Model
-
-Finlo uses a step-based workflow for feature development. Each step has:
-1. **Spec file** → `.claude/specs/<step_number>-<feature_slug>.md`
-2. **Feature branch** → `feature/<feature_slug>`
-3. **Custom command** → `/create-spec <step_number> <feature_name>`
-
-**To start a new step:**
-```bash
-/create-spec 3 "Login and Logout"
-```
-
-This creates the spec file and feature branch automatically.
 
 ---
 

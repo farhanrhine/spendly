@@ -1,32 +1,33 @@
 ⚠️ **WARNING: This project is under development and not ready for production use.**
 
-> **Note**: This project is developed collaboratively by a human creator and Claude Code, combining strategic thinking with AI-assisted implementation.
+> **Note**: This project is developed collaboratively by a human creator(me) and Claude Code, combining strategic thinking with AI-assisted implementation. It's not vibe-coding, it's Spec-Driven Development.
+
+**Finlo- development Team** =
+
+[![You(human)](https://avatars.githubusercontent.com/u/124152754?v=4&s=50)](https://github.com/farhanrhine) + [![Claude Code(AI)](https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png)](https://claude.com/product/claude-code)
 
 ---
 
 # Finlo - Expense Tracker
 
-A modern web-based expense tracking application built with Flask, designed to help users manage their personal finances.
-
-## Project Overview
-
-Finlo is a Flask-powered expense tracker that allows users to:
-- Register and authenticate accounts
-- Track expenses with full CRUD operations (Create, Read, Update, Delete)
-- View expense dashboards with clean, responsive UI
-- Manage personal financial data securely
+A personal expense tracking application built with Flask.
 
 ## Current Status
 
-The project is currently in development: 
+**Completed:**
+- Step 1: Database setup (users & expenses tables, seeding)
+
+**In Progress:**
+- Step 2: User registration feature 
 
 ## Tech Stack
 
-- **Backend**: Python 3.14 with Flask
-- **Database**: SQLite with SQLAlchemy support
-- **Frontend**: HTML5, CSS3, JavaScript (ES6)
-- **Styling**: CSS Flexbox for layout
-- **Authentication**: Custom session-based auth
+- **Backend**: Python 3.14 with Flask (single-file routes)
+- **Database**: SQLite3 with raw SQL (no ORMs, no SQLAlchemy)
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript (no frameworks)
+- **Styling**: CSS Flexbox for responsive layout
+- **Authentication**: Flask session-based auth with werkzeug password hashing
+- **Package Manager**: uv (not pip)
 
 ## Project Structure
 
@@ -82,29 +83,13 @@ uv run app.py
 
 3. Open your browser and navigate to `http://localhost:5000`
 
-## Key Features
-
-### User Authentication
-- Secure login and registration
-- Session-based authentication
-- Protected routes for authenticated users
-
-### Expense Management
-- Add new expenses with amount, category, and description
-- Edit existing expenses
-- Delete unwanted expenses
-- View expense history
-
-### Dashboard
-- Overview of all expenses
-- Expense categorization
-- Monthly/weekly expense summaries
-
 ## Development Notes
 
-- The project follows a Flask MVC pattern
-- Templates use Jinja2 templating engine
-- CSS uses Flexbox for responsive layout
-- Database operations are handled through helper functions
-- Git workflow includes regular commits for feature branches
+- The project follows a single-file Flask approach (all routes in `app.py`, no blueprints)
+- Database layer encapsulated in `database/db.py` with raw SQLite3 queries
+- Templates use Jinja2 with `base.html` as the master layout
+- CSS uses Flexbox for responsive layout (no Bootstrap, no Tailwind)
+- Frontend uses Vanilla JavaScript only (no React, no jQuery, no npm)
+- Password hashing via werkzeug, session management via Flask
+- Git workflow includes feature branches for each step
 

@@ -1,4 +1,4 @@
-# Spec Document for Database Setup
+# Spec: Database Setup (Step 1)
 
 ## 1. Overview
 
