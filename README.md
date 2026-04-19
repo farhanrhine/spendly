@@ -32,24 +32,41 @@ The project is currently in development:
 
 ```
 finlo/
-├── app.py              # Flask application routes and logic
-├── main.py             # Application entry point
-├── database/           # Database-related modules
+├── app.py                  # Flask application - all routes and main logic
+├── database/               # Database layer
 │   ├── __init__.py
-│   └── db.py           # Database connection and operations
-├── templates/          # HTML templates
-│   ├── base.html       # Master layout template
-│   ├── landing.html    # Homepage
-│   ├── login.html      # Login page
-│   ├── register.html   # Registration page
-│   ├── settings.html   # User settings page
-│   ├── privacy.html    # Privacy policy page
-│   └── terms.html      # Terms of service page
-├── static/             # Static assets
-│   ├── css/style.css   # Application styles
-│   └── js/main.js      # Client-side scripts
-└── pyproject.toml      # Project dependencies
+│   └── db.py              # Database functions: get_db(), init_db(), seed_db()
+├── templates/             # Jinja2 HTML templates
+│   ├── base.html          # Master layout template (base for all pages)
+│   ├── landing.html       # Homepage
+│   ├── login.html         # User login page
+│   ├── register.html      # User registration page
+│   ├── settings.html      # User settings page
+│   ├── privacy.html       # Privacy policy page
+│   └── terms.html         # Terms of service page
+├── static/                # Static assets
+│   ├── css/
+│   │   └── style.css      # Global styles (Flexbox-based responsive layout)
+│   └── js/
+│       └── main.js        # Client-side JavaScript (vanilla JS, no frameworks)
+├── .claude/               # Development & AI collaboration (not in GitHub)
+│   ├── plans/             # Implementation plans and tasks
+│   └── specs/             # Specification documents and architecture notes
+├── docs/                  # Documentation & learning materials (not in GitHub)
+├── Finlo.db               # SQLite database (auto-generated on app start)
+├── pyproject.toml         # Project dependencies (managed by uv)
+├── uv.lock                # Dependency lock file
+├── .gitignore             # Git ignore rules
+├── .claudeignore          # Claude Code ignore rules
+├── .python-version        # Python version specification
+├── CLAUDE.md              # Claude Code development guide
+└── README.md              # This file
 ```
+
+**Key Files:**
+- `app.py` - Single file containing all Flask routes (no blueprints)
+- `database/db.py` - All database operations encapsulated here
+- `pyproject.toml` - Managed by `uv` package manager (not pip)
 
 ## Getting Started
 
