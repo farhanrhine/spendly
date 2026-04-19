@@ -1,7 +1,8 @@
-from flask import Flask, render_template
-from database.db import get_db, init_db, seed_db
+from flask import Flask, render_template, request, redirect, url_for, session
+from database.db import get_db, init_db, seed_db, create_user
 
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-change-in-production'
 
 
 # Initialize database on startup
@@ -22,6 +23,29 @@ def landing():
 @app.route("/register")
 def register():
     return render_template("register.html")
+
+
+@app.route("/register", methods=["POST"])
+def register_post():
+    """
+    Handles registration form submission
+    Validates email, password, and confirm password, creates user, sets session, redirects to landing
+    """
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '').strip()
+    confirm_password = request.form.get('confirm_password', '').strip()
+    name = request.form.get('name', '').strip()
+    
+    # Validate confirm password matches
+    if password != confirm_password:
+        return render_template("register.html", error="Passwords do not match")
+    
+    try:
+        user_id = create_user(email, password, name)
+        session['user_id'] = user_id
+        return redirect(url_for('landing'))
+    except ValueError as e:
+        return render_template("register.html", error=str(e))
 
 
 @app.route("/login")

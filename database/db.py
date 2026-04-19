@@ -3,6 +3,91 @@ from werkzeug.security import generate_password_hash
 from datetime import datetime, timedelta
 
 
+def is_valid_email(email):
+    """
+    Validates email format
+    Returns True if email contains @ and . after @
+    """
+    email = email.strip()
+    if not email or '@' not in email:
+        return False
+    
+    local, domain = email.rsplit('@', 1)
+    return bool(local) and '.' in domain
+
+
+def is_valid_password(password):
+    """
+    Validates password length (minimum 8 characters)
+    Returns True if password is valid
+    """
+    return bool(password and len(password) >= 8)
+
+
+def email_exists(email):
+    """
+    Checks if email already exists in users table
+    Returns True if email found, False otherwise
+    """
+    db = get_db()
+    result = db.execute('SELECT COUNT(*) FROM users WHERE email = ?', (email.strip(),)).fetchone()
+    db.close()
+    return result[0] > 0
+
+
+def create_user(email, password, name):
+    """
+    Creates a new user with email, password, and name
+    Hashes password using werkzeug
+    Returns user_id on success
+    Raises ValueError on validation error or duplicate email
+    """
+    # Strip whitespace
+    email = email.strip()
+    password = password.strip()
+    name = name.strip()
+    
+    # Validate name
+    if not name:
+        raise ValueError("Full name is required")
+    
+    # Validate email
+    if not email:
+        raise ValueError("Email is required")
+    
+    if not is_valid_email(email):
+        raise ValueError("Please enter a valid email address")
+    
+    # Check for duplicate email
+    if email_exists(email):
+        raise ValueError("Email already registered. Try logging in instead.")
+    
+    # Validate password
+    if not password:
+        raise ValueError("Password is required")
+    
+    if not is_valid_password(password):
+        raise ValueError("Password must be at least 8 characters")
+    
+    # Hash password
+    password_hash = generate_password_hash(password)
+    
+    # Create user in database
+    db = get_db()
+    try:
+        db.execute(
+            'INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)',
+            (name, email, password_hash)
+        )
+        db.commit()
+        user_id = db.execute('SELECT id FROM users WHERE email = ?', (email,)).fetchone()[0]
+        db.close()
+        return user_id
+    except sqlite3.IntegrityError:
+        db.close()
+        raise ValueError("Email already registered. Try logging in instead.")
+
+
 def get_db():
     """
     Opens connection to Finlo.db in project root
