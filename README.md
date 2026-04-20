@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| **Finlo- development Team** = | [<img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" style="border-radius: 50%;" />](https://github.com/farhanrhine) <span style="font-size: 48px; font-weight: bold; margin: 0 15px;">+</span> [<img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" />](https://claude.com/product/claude-code) |
+| **Finlo- development Team** = | [<img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" style="border-radius: 50%;" />](https://github.com/farhanrhine) [<img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" />](https://claude.com/product/claude-code) |
 
 ---
 
