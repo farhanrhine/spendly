@@ -1,5 +1,5 @@
 import sqlite3
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
 
@@ -86,6 +86,43 @@ def create_user(email, password, name):
     except sqlite3.IntegrityError:
         db.close()
         raise ValueError("Email already registered. Try logging in instead.")
+
+
+def get_user_by_email(email):
+    """
+    Queries user by email from database
+    Returns user dict (id, name, email, password_hash) or None if not found
+    """
+    email = email.strip()
+    db = get_db()
+    result = db.execute('SELECT id, name, email, password_hash FROM users WHERE email = ?', (email,)).fetchone()
+    db.close()
+    return dict(result) if result else None
+
+
+def get_user_by_id(user_id):
+    """
+    Queries user by user_id from database
+    Returns user dict (id, name, email) or None if not found
+    """
+    db = get_db()
+    result = db.execute('SELECT id, name, email FROM users WHERE id = ?', (user_id,)).fetchone()
+    db.close()
+    return dict(result) if result else None
+
+
+def validate_user(email, password):
+    """
+    Validates email and password against database
+    Returns user_id on success, None on failure
+    """
+    email = email.strip()
+    user = get_user_by_email(email)
+    
+    if user and check_password_hash(user['password_hash'], password):
+        return user['id']
+    
+    return None
 
 
 def get_db():

@@ -40,8 +40,14 @@
                         </a>
                     </div>
                 </div>
-                <a href="{{ url_for('login') }}">Sign in</a>
-                <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                {% if session.get('user_id') %}
+                    <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                        <button type="submit" class="nav-logout" style="background: none; border: none; color: inherit; cursor: pointer; text-decoration: none;">Sign out</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Sign in</a>
+                    <a href="{{ url_for('register') }}" class="nav-cta">Get started</a>
+                {% endif %}
             </div>
         </div>
     </nav>
