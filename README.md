@@ -2,9 +2,7 @@
 
 > **Note**: This project is developed collaboratively by a human creator(me) and Claude Code, combining strategic thinking with AI-assisted implementation. It's not vibe-coding, it's Spec-Driven Development.
 
-**Finlo- development Team** =
-
-[![You(human)](https://avatars.githubusercontent.com/u/124152754?v=4&s=50)](https://github.com/farhanrhine) + [![Claude Code(AI)](https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png)](https://claude.com/product/claude-code)
+**Finlo- development Team** =  <a href="https://github.com/farhanrhine"><img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" alt="You(human)" style="border-radius: 50%; vertical-align: middle;" /></a> <span style="font-size: 24px; vertical-align: middle; margin: 0 10px;">+</span> <a href="https://claude.com/product/claude-code"><img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" alt="Claude Code(AI)" style="vertical-align: middle;" /></a>
 
 ---
 
@@ -16,9 +14,11 @@ A personal expense tracking application built with Flask.
 
 **Completed:**
 - Step 1: Database setup (users & expenses tables, seeding)
+- Step 2: User registration feature
+- Step 3: Login and logout authentication
 
 **In Progress:**
-- Step 2: User registration feature 
+- Step 4: Profile page 
 
 ## Tech Stack
 
