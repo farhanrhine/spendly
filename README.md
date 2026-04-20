@@ -2,7 +2,7 @@
 
 > **Note**: This project is developed collaboratively by a human creator(me) and Claude Code, combining strategic thinking with AI-assisted implementation. It's not vibe-coding, it's Spec-Driven Development.
 
-**Finlo- development Team** =  <a href="https://github.com/farhanrhine"><img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" alt="You(human)" style="border-radius: 50%; vertical-align: middle;" /></a> <span style="font-size: 24px; vertical-align: middle; margin: 0 10px;">+</span> <a href="https://claude.com/product/claude-code"><img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" alt="Claude Code(AI)" style="vertical-align: middle;" /></a>
+**Finlo- development Team** = <a href="https://github.com/farhanrhine"><img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" alt="You(human)" style="border-radius: 50%; display: inline-block; vertical-align: middle;" /></a><span style="font-size: 24px; display: inline-block; vertical-align: middle; margin: 0 15px;">+</span><a href="https://claude.com/product/claude-code"><img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" alt="Claude Code(AI)" style="display: inline-block; vertical-align: middle;" /></a>
 
 ---
 
