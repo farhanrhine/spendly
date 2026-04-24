@@ -17,10 +17,10 @@ with app.app_context():
 
 @app.route("/")
 def landing():
-    user = None
+    # Redirect logged-in users to profile page
     if session.get('user_id'):
-        user = get_user_by_id(session['user_id'])
-    return render_template("landing.html", user=user)
+        return redirect(url_for('profile'))
+    return render_template("landing.html")
 
 
 @app.route("/register")
@@ -35,7 +35,7 @@ def register():
 def register_post():
     """
     Handles registration form submission
-    Validates email, password, and confirm password, creates user, sets session, redirects to landing
+    Validates email, password, and confirm password, creates user, sets session, redirects to profile
     """
     email = request.form.get('email', '').strip()
     password = request.form.get('password', '').strip()
@@ -49,7 +49,7 @@ def register_post():
     try:
         user_id = create_user(email, password, name)
         session['user_id'] = user_id
-        return redirect(url_for('landing'))
+        return redirect(url_for('profile'))
     except ValueError as e:
         return render_template("register.html", error=str(e))
 
@@ -66,7 +66,7 @@ def login():
 def login_post():
     """
     Handles login form submission
-    Validates email and password, sets session, redirects to landing
+    Validates email and password, sets session, redirects to profile
     """
     email = request.form.get('email', '').strip()
     password = request.form.get('password', '').strip()
@@ -75,7 +75,7 @@ def login_post():
     
     if user_id:
         session['user_id'] = user_id
-        return redirect(url_for('landing'))
+        return redirect(url_for('profile'))
     else:
         return render_template("login.html", error="Invalid email or password")
 
