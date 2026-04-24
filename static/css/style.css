@@ -939,11 +939,14 @@ a { color: inherit; text-decoration: none; }
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    background: var(--paper-warm);
+    border: 1px solid var(--border-soft);
 }
 
 .stat-icon i {
     width: 24px;
     height: 24px;
+    color: var(--ink);
 }
 
 .stat-content {
@@ -1075,13 +1078,14 @@ a { color: inherit; text-decoration: none; }
     color: white;
 }
 
-.badge-food { background: #FF6B6B; }
-.badge-transport { background: #4ECDC4; }
-.badge-bills { background: #FFD93D; color: var(--ink); }
-.badge-health { background: #6BCB77; }
-.badge-entertainment { background: #A78BFA; }
-.badge-shopping { background: #F97316; }
-.badge-other { background: #64748B; }
+/* Refined category colors matching Editorial Parchment palette */
+.badge-food { background: #c2563f; color: white; }
+.badge-transport { background: #6B8B9F; color: white; }
+.badge-bills { background: #b8956f; color: white; }
+.badge-health { background: #7a8b7d; color: white; }
+.badge-entertainment { background: #8b6b9d; color: white; }
+.badge-shopping { background: #a0674f; color: white; }
+.badge-other { background: #6b6357; color: white; }
 
 /* Category Breakdown Section */
 .category-breakdown-section {
