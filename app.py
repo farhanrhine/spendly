@@ -121,10 +121,10 @@ def profile():
     context = {
         # User info card
         'user': {
-            'name': 'John Doe',
-            'email': 'john@example.com',
+            'name': 'Sarah',
+            'email': 'sarah@example.com',
             'member_since': 'April 2026',
-            'initials': 'JD'
+            'initials': 'S'
         },
         
         # Summary stats
