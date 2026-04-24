@@ -834,6 +834,222 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ------------------------------------------------------------------ */
+/* Profile Page                                                        */
+/* ------------------------------------------------------------------ */
+
+.profile-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* User info card */
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.profile-card h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--ink);
+    margin-bottom: 0.25rem;
+}
+
+.profile-card .email {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.profile-card .member-since {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+}
+
+/* Summary stats */
+.stats-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    flex: 1;
+    min-width: 150px;
+    padding: 1.5rem;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    font-weight: 500;
+}
+
+/* Transaction history */
+.transactions-section {
+    margin-bottom: 3rem;
+}
+
+.transactions-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.transactions-table thead {
+    background: var(--paper-warm);
+}
+
+.transactions-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.transactions-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--ink);
+    font-size: 0.95rem;
+}
+
+.transactions-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.transactions-table tbody tr:hover {
+    background: var(--paper-warm);
+}
+
+/* Category badges */
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--paper);
+    text-transform: capitalize;
+}
+
+.badge-food { background: #FF6B6B; }
+.badge-transport { background: #4ECDC4; }
+.badge-bills { background: #FFD93D; color: var(--ink); }
+.badge-health { background: #6BCB77; }
+.badge-entertainment { background: #A78BFA; }
+.badge-shopping { background: #F97316; }
+.badge-other { background: #64748B; }
+
+/* Category breakdown */
+.category-breakdown-section {
+    margin-top: 2rem;
+}
+
+.category-breakdown-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+}
+
+.category-breakdown {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+}
+
+.category-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.category-row:last-child {
+    border-bottom: none;
+}
+
+.category-name {
+    width: 100px;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.95rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+}
+
+.category-total {
+    width: 80px;
+    text-align: right;
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 0.95rem;
+}
+
+/* ------------------------------------------------------------------ */
 /* Responsive                                                          */
 /* ------------------------------------------------------------------ */
 
@@ -843,9 +1059,19 @@ a { color: inherit; text-decoration: none; }
     .mock-card-stats { grid-template-columns: 1fr; }
 
     .features-inner { grid-template-columns: 1fr; }
+    
+    .stats-row { flex-direction: column; }
+    .stat-box { flex: 1 1 100%; }
 }
 
 @media (max-width: 600px) {
     .nav-links a:not(.nav-cta) { display: none; }
     .hero { padding: 3rem 1rem 2rem; }
+    
+    .profile-container { padding: 2rem 1rem; }
+    .transactions-table { font-size: 0.85rem; }
+    .transactions-table th,
+    .transactions-table td { padding: 0.75rem 0.5rem; }
+    .category-name { width: 80px; }
+    .category-total { width: 70px; }
 }
