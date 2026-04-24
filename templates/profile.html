@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="profile-container">
+  
+  <!-- User Info Card -->
+  <section class="profile-card">
+    <div class="avatar">{{ user.initials }}</div>
+    <h1>{{ user.name }}</h1>
+    <p class="email">{{ user.email }}</p>
+    <p class="member-since">Member since {{ user.member_since }}</p>
+  </section>
+
+  <!-- Summary Stats Row -->
+  <section class="stats-row">
+    <div class="stat-box">
+      <span class="stat-value">{{ stats.total_spent }}</span>
+      <span class="stat-label">Total Spent</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-value">{{ stats.transaction_count }}</span>
+      <span class="stat-label">Transactions</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-value">{{ stats.top_category }}</span>
+      <span class="stat-label">Top Category</span>
+    </div>
+  </section>
+
+  <!-- Transaction History Table -->
+  <section class="transactions-section">
+    <h2>Recent Transactions</h2>
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+        <tr>
+          <td>{{ txn.date }}</td>
+          <td>{{ txn.description }}</td>
+          <td><span class="badge badge-{{ txn.category|lower }}">{{ txn.category }}</span></td>
+          <td>{{ txn.amount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Category Breakdown -->
+  <section class="category-breakdown-section">
+    <h2>Spending by Category</h2>
+    <div class="category-breakdown">
+      {% for cat in categories %}
+      <div class="category-row">
+        <span class="category-name">{{ cat.name }}</span>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: {{ cat.percentage }}%"></div>
+        </div>
+        <span class="category-total">{{ cat.total }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}
