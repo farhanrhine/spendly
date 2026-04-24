@@ -80,3 +80,10 @@ document.addEventListener('DOMContentLoaded', function() {
         videoFrame.src = currentSrc;
     }
 });
+
+// Initialize Lucide Icons
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+});

@@ -3,62 +3,104 @@
 {% block content %}
 <div class="profile-container">
   
-  <!-- User Info Card -->
-  <section class="profile-card">
-    <div class="avatar">{{ user.initials }}</div>
-    <h1>{{ user.name }}</h1>
-    <p class="email">{{ user.email }}</p>
-    <p class="member-since">Member since {{ user.member_since }}</p>
-  </section>
-
-  <!-- Summary Stats Row -->
-  <section class="stats-row">
-    <div class="stat-box">
-      <span class="stat-value">{{ stats.total_spent }}</span>
-      <span class="stat-label">Total Spent</span>
-    </div>
-    <div class="stat-box">
-      <span class="stat-value">{{ stats.transaction_count }}</span>
-      <span class="stat-label">Transactions</span>
-    </div>
-    <div class="stat-box">
-      <span class="stat-value">{{ stats.top_category }}</span>
-      <span class="stat-label">Top Category</span>
+  <!-- User Profile Header Card -->
+  <section class="profile-header-card">
+    <div class="profile-header-content">
+      <div class="avatar-large">{{ user.initials }}</div>
+      <div class="profile-info">
+        <h1 class="profile-name">{{ user.name }}</h1>
+        <p class="profile-email">{{ user.email }}</p>
+        <p class="profile-member-since">
+          <i data-lucide="calendar" class="profile-icon"></i>
+          Member since {{ user.member_since }}
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- Transaction History Table -->
+  <!-- Summary Stats Grid -->
+  <section class="profile-stats">
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #EFF6FF;">
+        <i data-lucide="wallet" style="color: #0084FF;"></i>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Total Spent</p>
+        <p class="stat-value">{{ stats.total_spent }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #F0FDF4;">
+        <i data-lucide="trending-down" style="color: #10B981;"></i>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Transactions</p>
+        <p class="stat-value">{{ stats.transaction_count }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon" style="background: #FEF3C7;">
+        <i data-lucide="zap" style="color: #F59E0B;"></i>
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Top Category</p>
+        <p class="stat-value">{{ stats.top_category }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Transactions Section -->
   <section class="transactions-section">
-    <h2>Recent Transactions</h2>
-    <table class="transactions-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Description</th>
-          <th>Category</th>
-          <th>Amount</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for txn in transactions %}
-        <tr>
-          <td>{{ txn.date }}</td>
-          <td>{{ txn.description }}</td>
-          <td><span class="badge badge-{{ txn.category|lower }}">{{ txn.category }}</span></td>
-          <td>{{ txn.amount }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="section-header">
+      <h2>
+        <i data-lucide="list" class="section-icon"></i>
+        Recent Transactions
+      </h2>
+      <a href="#" class="view-all-link">View all</a>
+    </div>
+    
+    <div class="transactions-wrapper">
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th class="amount-col">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for txn in transactions %}
+          <tr>
+            <td class="date-col">{{ txn.date }}</td>
+            <td class="description-col">{{ txn.description }}</td>
+            <td><span class="badge badge-{{ txn.category|lower }}">{{ txn.category }}</span></td>
+            <td class="amount-col">{{ txn.amount }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </section>
 
-  <!-- Category Breakdown -->
+  <!-- Spending by Category Section -->
   <section class="category-breakdown-section">
-    <h2>Spending by Category</h2>
+    <div class="section-header">
+      <h2>
+        <i data-lucide="pie-chart" class="section-icon"></i>
+        Spending by Category
+      </h2>
+    </div>
+    
     <div class="category-breakdown">
       {% for cat in categories %}
       <div class="category-row">
-        <span class="category-name">{{ cat.name }}</span>
+        <div class="category-info">
+          <span class="category-name">{{ cat.name }}</span>
+          <span class="category-percentage">{{ cat.percentage }}%</span>
+        </div>
         <div class="progress-bar">
           <div class="progress-fill" style="width: {{ cat.percentage }}%"></div>
         </div>
