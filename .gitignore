@@ -13,7 +13,6 @@ expense_tracker.db
 *.pyo
 .env
 .DS_Store
-.claude/plans/
 docs/
 
 
