@@ -25,6 +25,7 @@
 *   `test_profile_filter_persistence`: Verified that selected dates remain in the form fields after applying a filter.
 *   `test_profile_filter_data_restriction`: Verified that summary stats and transaction lists correctly reflect only the data within the selected date range.
 *   `test_profile_filter_clear`: Verified that clicking the "Clear" button resets the filters and displays all-time data.
+*   `test_profile_quick_filters`: Verified that quick filter buttons (This Month, Last Month, Last 3 Months) correctly calculate date ranges and apply active styling.
 
 ---
 

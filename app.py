@@ -119,9 +119,32 @@ def profile():
     if not user_id:
         return redirect(url_for('login'))
     
+    from datetime import timedelta
+    
     # Get date filters from query parameters
+    range_type = request.args.get('range')
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
+    
+    today = datetime.now()
+    active_range = range_type or 'custom'
+    
+    # Handle Quick Filters
+    if range_type == 'this_month':
+        start_date = today.replace(day=1).strftime('%Y-%m-%d')
+        end_date = today.strftime('%Y-%m-%d')
+    elif range_type == 'last_month':
+        last_month_end = today.replace(day=1) - timedelta(days=1)
+        start_date = last_month_end.replace(day=1).strftime('%Y-%m-%d')
+        end_date = last_month_end.strftime('%Y-%m-%d')
+    elif range_type == 'last_3_months':
+        start_date = (today - timedelta(days=90)).strftime('%Y-%m-%d')
+        end_date = today.strftime('%Y-%m-%d')
+    elif range_type == 'all':
+        start_date = None
+        end_date = None
+    elif start_date or end_date:
+        active_range = 'custom'
 
     # Validate dates (Security Review suggestion)
     def validate_date(date_str):
@@ -167,7 +190,8 @@ def profile():
         'transactions': transactions,
         'categories': categories,
         'start_date': valid_start,
-        'end_date': valid_end
+        'end_date': valid_end,
+        'active_range': active_range
     }
     
     return render_template('profile.html', **context)

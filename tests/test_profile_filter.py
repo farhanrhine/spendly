@@ -5,6 +5,7 @@ from flask import url_for
 
 import os
 import tempfile
+from datetime import datetime, timedelta
 
 @pytest.fixture
 def app():
@@ -69,8 +70,9 @@ def test_profile_filter_presence(auth_client):
     assert response.status_code == 200
     assert b'START DATE' in response.data.upper()
     assert b'END DATE' in response.data.upper()
-    assert b'Filter' in response.data
+    assert b'Apply' in response.data
     assert b'Clear' in response.data
+    assert b'This Month' in response.data
 
 def test_profile_filter_persistence(auth_client):
     """Selected dates should persist in the form after filtering."""
@@ -105,3 +107,30 @@ def test_profile_filter_clear(auth_client):
     response = auth_client.get('/profile')
     assert b'3' in response.data # Back to all transactions
     assert b'600.00' in response.data
+
+def test_profile_quick_filters(auth_client):
+    """
+    Verify that quick filter buttons (This Month, Last Month, etc.) 
+    apply correct date ranges and active styling.
+    """
+    today = datetime.now()
+    
+    # 1. Test "This Month"
+    this_month_start = today.replace(day=1).strftime('%Y-%m-%d')
+    response = auth_client.get('/profile?range=this_month')
+    assert response.status_code == 200
+    assert b'active">This Month</a>' in response.data
+    assert f'value="{this_month_start}"'.encode() in response.data
+    
+    # 2. Test "Last Month"
+    last_month_end = today.replace(day=1) - timedelta(days=1)
+    last_month_start = last_month_end.replace(day=1).strftime('%Y-%m-%d')
+    response = auth_client.get('/profile?range=last_month')
+    assert b'active">Last Month</a>' in response.data
+    assert f'value="{last_month_start}"'.encode() in response.data
+    
+    # 3. Test "Last 3 Months"
+    three_months_ago = (today - timedelta(days=90)).strftime('%Y-%m-%d')
+    response = auth_client.get('/profile?range=last_3_months')
+    assert b'active">Last 3 Months</a>' in response.data
+    assert f'value="{three_months_ago}"'.encode() in response.data
