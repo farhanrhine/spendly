@@ -1,0 +1,19 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto eol=lf
+
+# Force bash scripts to always use LF, even on Windows
+*.sh text eol=lf
+
+# Explicitly mark files that are binary and should not be mangled
+*.db binary
+*.sqlite binary
+*.sqlite3 binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+
+# Denotes that certain files are generated and should not be diffed
+uv.lock -diff
