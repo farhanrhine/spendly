@@ -13,34 +13,53 @@ This file provides guidance to Claude Code when working with **Finlo**, a person
 ```
 finlo/
 ├── .claude/
-│   ├── commands/        # Custom Claude commands (create-spec, seed-user, seed-expense)
-│   ├── specs/           # Feature specifications for each step
+│   ├── agents/                   # Custom subagents (test-writer, quality-reviewer, security-reviewer, test-runner)
+│   ├── commands/                 # Custom Claude commands (create-spec, seed-user, seed-expense)
+│   ├── plans/                    # Implementation plans for each feature step
+│   ├── skills/                   # Custom skills (e.g., frontend-design/)
+│   ├── specs/                    # Feature specifications for each step
+│   ├── test-report/              # Test verification reports for each step
 │   └── settings.local.json
-├── app.py              # All routes — single file, no blueprints
+├── app.py                        # All routes — single file, no blueprints
 ├── database/
 │   ├── __init__.py
-│   └── db.py           # SQLite helpers and database operations (raw SQLite3)
+│   ├── db.py                     # SQLite helpers and database operations (raw SQLite3)
+│   └── queries.py                # Reusable database query functions
 ├── templates/
-│   ├── base.html       # Shared layout — all templates must extend this
-│   ├── landing.html    # Homepage
-│   ├── login.html      # Login page
-│   ├── register.html   # Registration page
-│   ├── settings.html   # User settings page
-│   ├── privacy.html    # Privacy policy page
-│   └── terms.html      # Terms of service page
+│   ├── base.html                 # Shared layout — all templates must extend this
+│   ├── landing.html              # Homepage
+│   ├── login.html                # Login page
+│   ├── register.html             # Registration page
+│   ├── profile.html              # User profile page
+│   ├── settings.html             # User settings page
+│   ├── privacy.html              # Privacy policy page
+│   └── terms.html                # Terms of service page
 ├── static/
 │   ├── css/
-│   │   └── style.css   # Global styles using Flexbox
+│   │   └── style.css             # Global styles using Flexbox
 │   └── js/
-│       └── main.js     # Vanilla JS only
-└── pyproject.toml      # Project dependencies (managed with uv)
+│       └── main.js               # Vanilla JS only
+├── .claudeignore                 # Files/folders ignored by Claude (e.g., docs/)
+├── .python-version               # Python version specification
+├── AGENTS.md                     # Agent registry — other then Claude Code
+├── CLAUDE.md                     # This file — Claude Code guidance (you are here)
+├── Finlo.db                      # SQLite database (with demo data on startup)
+├── README.md                     # Project overview and getting started
+├── pyproject.toml                # Project dependencies (managed with uv)
+├── seed_expenses_script.py       # Script to seed database with demo data
+└── uv.lock                       # Dependency lock file (managed by uv)
 ```
 
 **Where things belong:**
 - New routes → `app.py` only, no blueprints
 - DB logic → `database/db.py` only, never inline in routes
+- Reusable DB queries → `database/queries.py` for shared helper functions
 - New pages → new `.html` file extending `base.html`
 - Styles → `style.css` (single stylesheet with Flexbox layout)
+- Feature specs → `.claude/specs/<number>-feature-name.md`
+- Implementation plans → `.claude/plans/plan-<feature-name>.md` (auto-generated)
+- Test reports → `.claude/test-report/<number>-feature-name-verification-report.md`
+- Custom agents → `.claude/agents/<agent-name>.md` (test-writer, quality-reviewer, security-reviewer, test-runner)
 
 ---
 
@@ -103,6 +122,34 @@ pytest
 
 ---
 
+## Custom Agents for Quality Assurance
+
+Finlo uses specialized subagents to automate testing and code review after feature implementation:
+
+| Agent | Purpose | Triggered by |
+|-------|---------|--------------|
+| `finlo-test-writer` | Writes spec-driven pytest test cases after feature implementation | Manual invoke after feature is complete |
+| `finlo-test-runner` | Executes pytest suite and analyzes results (pass/fail, coverage, guardrails) | After test-writer completes (`/test-feature`) |
+| `finlo-quality-reviewer` | Reviews code for clean, maintainable Flask patterns (architecture, naming, style) | `/code-review-feature` (parallel with security-reviewer) |
+| `finlo-security-reviewer` | Reviews code for web vulnerabilities and security issues (SQL injection, auth, XSS) | `/code-review-feature` (parallel with quality-reviewer) |
+
+**Workflow**: After implementing a feature → `/test-feature` → tests written → tests run → `/code-review-feature` → security + quality reviews → git commit & push
+
+---
+
+## SDD Workflow Phases
+
+**Spec-Driven Development** workflow in Finlo follows these phases:
+
+1. **Planning**: Read spec → understand requirements
+2. **Implementation**: Write code (routes, DB helpers, templates)
+3. **Quality Assurance**:
+   - **Testing Phase** (`/test-feature`): test-writer creates tests → test-runner executes → analysis report
+   - **Code Review Phase** (`/code-review-feature`): finlo-quality-reviewer + finlo-security-reviewer run in parallel → compressed summaries
+4. **Integration**: Stage changes → commit with co-author → push to feature branch
+
+---
+
 ## Warnings and Things to Avoid
 
 - **Never use raw string returns** when a template should be rendered
@@ -111,7 +158,7 @@ pytest
 - **Never install new packages** without explicit instruction — keep `pyproject.toml` in sync
 - **Never use JS frameworks** — the frontend is intentionally vanilla
 - **Never commit without a meaningful message** — use conventional commit style + include Claude as co-author
-- `.claudeignore` excludes the `docs/` directory to optimize context window — respect this when searching
+- **Never search in `.claudeignore` files** — `docs/` folder is excluded to optimize context window. Claude has no permission to access ignored files
 - **Never modify route placeholders** without reading the spec first — each placeholder marks a step number
 
 ---
@@ -125,6 +172,8 @@ Project-specific commands in `.claude/commands/`:
 | `/create-spec` | Create spec file + feature branch | `/create-spec 2 registration` |
 | `/seed-user` | Create random Muslim user in DB | `/seed-user` (no args) |
 | `/seed-expense` | Generate realistic dummy expenses | `/seed-expense <user_id> <count> <months>` |
+| `/test-feature` | Run test-writer → test-runner pipeline | `/test-feature 2-registration` |
+| `/code-review-feature` | Run parallel security + quality reviews | `/code-review-feature 2-registration` |
 
 These commands are scoped to this project only and won't appear in other projects.
 
