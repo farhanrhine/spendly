@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import datetime
 from database.db import get_db, init_db, seed_db, create_user, validate_user, get_user_by_id
 from database.queries import get_user_by_id as get_user_details, get_summary_stats, get_recent_transactions, get_category_breakdown
 
@@ -118,6 +119,45 @@ def profile():
     if not user_id:
         return redirect(url_for('login'))
     
+    from datetime import timedelta
+    
+    # Get date filters from query parameters
+    range_type = request.args.get('range')
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+    
+    today = datetime.now()
+    active_range = range_type or 'custom'
+    
+    # Handle Quick Filters
+    if range_type == 'this_month':
+        start_date = today.replace(day=1).strftime('%Y-%m-%d')
+        end_date = today.strftime('%Y-%m-%d')
+    elif range_type == 'last_month':
+        last_month_end = today.replace(day=1) - timedelta(days=1)
+        start_date = last_month_end.replace(day=1).strftime('%Y-%m-%d')
+        end_date = last_month_end.strftime('%Y-%m-%d')
+    elif range_type == 'last_3_months':
+        start_date = (today - timedelta(days=90)).strftime('%Y-%m-%d')
+        end_date = today.strftime('%Y-%m-%d')
+    elif range_type == 'all':
+        start_date = None
+        end_date = None
+    elif start_date or end_date:
+        active_range = 'custom'
+
+    # Validate dates (Security Review suggestion)
+    def validate_date(date_str):
+        if not date_str: return None
+        try:
+            datetime.strptime(date_str, '%Y-%m-%d')
+            return date_str
+        except (ValueError, TypeError):
+            return None
+
+    valid_start = validate_date(start_date)
+    valid_end = validate_date(end_date)
+    
     # Fetch dynamic data from database
     user = get_user_details(user_id)
     if not user:
@@ -126,27 +166,32 @@ def profile():
     # Add initials
     user['initials'] = ''.join(word[0].upper() for word in user['name'].split())
     
-    # Fetch stats
-    stats = get_summary_stats(user_id)
-    # Format total_spent with ₹ symbol
-    if stats['total_spent'] > 0:
-        stats['total_spent'] = f"₹{stats['total_spent']:.2f}"
-    else:
-        stats['total_spent'] = "₹0.00"
+    # Fetch stats with validated filters
+    raw_stats = get_summary_stats(user_id, start_date=valid_start, end_date=valid_end)
+    
+    # Format stats for display (Quality Review suggestion: cleaner data mapping)
+    stats = {
+        'total_spent': f"₹{raw_stats['total_spent']:.2f}" if raw_stats['total_spent'] > 0 else "₹0.00",
+        'transaction_count': raw_stats['transaction_count'],
+        'top_category': raw_stats['top_category'] if raw_stats['top_category'] != '—' else "None"
+    }
     
     # Fetch transactions and format amounts
-    transactions = get_recent_transactions(user_id, limit=10)
+    transactions = get_recent_transactions(user_id, limit=10, start_date=valid_start, end_date=valid_end)
     for txn in transactions:
         txn['amount'] = f"₹{txn['amount']:.2f}"
     
     # Fetch category breakdown
-    categories = get_category_breakdown(user_id)
+    categories = get_category_breakdown(user_id, start_date=valid_start, end_date=valid_end)
     
     context = {
         'user': user,
         'stats': stats,
         'transactions': transactions,
-        'categories': categories
+        'categories': categories,
+        'start_date': valid_start,
+        'end_date': valid_end,
+        'active_range': active_range
     }
     
     return render_template('profile.html', **context)

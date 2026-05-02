@@ -18,6 +18,33 @@
     </div>
   </section>
 
+  <!-- Data Filter Section -->
+  <section class="filter-section">
+    <div class="quick-filters">
+      <a href="{{ url_for('profile', range='all') }}" class="filter-btn {{ 'active' if active_range == 'all' or not active_range }}">All Time</a>
+      <a href="{{ url_for('profile', range='this_month') }}" class="filter-btn {{ 'active' if active_range == 'this_month' }}">This Month</a>
+      <a href="{{ url_for('profile', range='last_month') }}" class="filter-btn {{ 'active' if active_range == 'last_month' }}">Last Month</a>
+      <a href="{{ url_for('profile', range='last_3_months') }}" class="filter-btn {{ 'active' if active_range == 'last_3_months' }}">Last 3 Months</a>
+      
+      <div style="width: 1px; height: 24px; background: var(--border-soft); margin: 0 0.5rem; align-self: center;"></div>
+
+      <form method="GET" action="{{ url_for('profile') }}" class="filter-form">
+        <div class="filter-group">
+          <label for="start_date">Start Date</label>
+          <input type="date" id="start_date" name="start_date" value="{{ start_date or '' }}" class="filter-input">
+        </div>
+        <div class="filter-group">
+          <label for="end_date">End Date</label>
+          <input type="date" id="end_date" name="end_date" value="{{ end_date or '' }}" class="filter-input">
+        </div>
+        <div class="filter-actions">
+          <button type="submit" class="btn-filter">Apply</button>
+          <a href="{{ url_for('profile') }}" class="btn-clear">Clear</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
   <!-- Summary Stats Grid -->
   <section class="profile-stats">
     <div class="stat-card">

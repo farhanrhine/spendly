@@ -23,8 +23,9 @@ finlo/
 ├── app.py                        # All routes — single file, no blueprints
 ├── database/
 │   ├── __init__.py
-│   ├── db.py                     # SQLite helpers and database operations (raw SQLite3)
+│   ├── db.py                     # SQLite helpers (supports configurable DATABASE path for testing)
 │   └── queries.py                # Reusable database query functions
+├── tests/                        # Pytest suite (feature-specific tests)
 ├── templates/
 │   ├── base.html                 # Shared layout — all templates must extend this
 │   ├── landing.html              # Homepage
@@ -118,7 +119,7 @@ pytest
 - **Responsive Design**: CSS Flexbox ensures mobile-friendly layouts
 - **Git Workflow**: Use semantic versioning in commit messages, develop features in branches before merging to main
 - **Database State**: `Finlo.db` is seeded with demo user (`demo@Finlo.com` / `demo123`) and 8 sample expenses on startup
-- **Testing**: pytest is available; write tests in a `tests/` directory (not yet created)
+- **Testing**: pytest is available; write and maintain tests in the `tests/` directory
 
 ---
 
@@ -157,7 +158,7 @@ Finlo uses specialized subagents to automate testing and code review after featu
 - **Never put DB logic in route functions** — it belongs in `database/db.py`
 - **Never install new packages** without explicit instruction — keep `pyproject.toml` in sync
 - **Never use JS frameworks** — the frontend is intentionally vanilla
-- **Never commit without a meaningful message** — use conventional commit style + include Claude as co-author
+- **Never wait for user reminders to commit** — perform incremental commits (with Co-Authored-By tag) after each logical step of a feature implementation
 - **Never search in `.claudeignore` files** — `docs/` folder is excluded to optimize context window. Claude has no permission to access ignored files
 - **Never modify route placeholders** without reading the spec first — each placeholder marks a step number
 
