@@ -81,7 +81,11 @@
     padding: 0;
 }
 
-html { font-size: 16px; scroll-behavior: smooth; }
+html { 
+    font-size: 16px; 
+    scroll-behavior: smooth; 
+    background-color: var(--paper);
+}
 
 body {
     background: var(--paper);
@@ -90,7 +94,6 @@ body {
     font-size: 1rem;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a { color: inherit; text-decoration: none; }

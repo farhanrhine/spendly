@@ -20,18 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Theme Management (for initial page load)
-document.addEventListener('DOMContentLoaded', function() {
-    const htmlElement = document.documentElement;
-    
-    // Get saved theme preference or detect system preference
-    const savedTheme = localStorage.getItem('theme');
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = savedTheme ? savedTheme === 'dark' : systemPrefersDark;
-    
-    // Set initial theme
-    htmlElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-});
+// Theme management moved to head in base.html to prevent flash
 
 // Video Modal Functionality
 document.addEventListener('DOMContentLoaded', function() {
