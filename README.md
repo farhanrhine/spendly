@@ -20,10 +20,10 @@ A personal expense tracking application built with Flask.
 - Step 3: Login and logout authentication
 - Step 4: Profile page
 - Step 5: Connect profile page to database
-- Step 6: Data filter for profile page
-- Step 7: Post-implementation refactoring and security hardening
+- Step 6: Data filter for profile page (including security hardening & quick filters)
 
 **In Progress:**
+- Step 7: Add new expenses feature (Planning Phase)
 
 ## Tech Stack
 
