@@ -1,10 +1,11 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
 from database.db import get_db, init_db, seed_db, create_user, validate_user, get_user_by_id
-from database.queries import get_user_by_id as get_user_details, get_summary_stats, get_recent_transactions, get_category_breakdown
+from database.queries import get_user_by_id as get_user_details, get_summary_stats, get_recent_transactions, get_category_breakdown, create_expense
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-change-in-production'
+app.secret_key = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
 
 
 # Initialize database on startup
@@ -212,7 +213,86 @@ def analytics():
 
 @app.route("/expenses/add")
 def add_expense():
-    return "Add expense — coming in Step 7"
+    """
+    Display the expense entry form.
+    Only accessible to authenticated users.
+    """
+    # Authentication guard
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    
+    # Generate CSRF token if not already in session
+    import secrets
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)
+    csrf_token = session.get('csrf_token')
+    
+    # Categories list
+    categories = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+    default_date = datetime.now().strftime('%Y-%m-%d')
+    
+    return render_template('add_expense.html', categories=categories, default_date=default_date, csrf_token=csrf_token)
+
+
+@app.route("/expenses/add", methods=["POST"])
+def add_expense_post():
+    """
+    Handle expense form submission.
+    Validates inputs, creates expense, and redirects to profile.
+    """
+    # Authentication guard
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    
+    # CSRF token validation
+    csrf_token = request.form.get('csrf_token', '')
+    session_token = session.get('csrf_token', '')
+    if not csrf_token or csrf_token != session_token:
+        categories = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+        default_date = datetime.now().strftime('%Y-%m-%d')
+        return render_template('add_expense.html',
+                             categories=categories,
+                             default_date=default_date,
+                             error='Security token expired. Please refresh and try again.')
+    
+    # Extract form data
+    amount = request.form.get('amount', '').strip()
+    category = request.form.get('category', '').strip()
+    date = request.form.get('date', '').strip()
+    description = request.form.get('description', '').strip()
+    
+    # Categories list for re-rendering on error
+    categories = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+    default_date = datetime.now().strftime('%Y-%m-%d')
+    
+    # Validate amount is convertible to float
+    try:
+        float(amount)
+    except ValueError:
+        return render_template('add_expense.html',
+                             categories=categories,
+                             default_date=default_date,
+                             error='Amount must be a valid number',
+                             amount=amount,
+                             category=category,
+                             date=date,
+                             description=description)
+    
+    # Try to create the expense
+    try:
+        expense_id = create_expense(user_id, amount, category, date, description)
+        return redirect(url_for('profile'))
+    except ValueError as e:
+        return render_template('add_expense.html',
+                             categories=categories,
+                             default_date=default_date,
+                             error=str(e),
+                             amount=amount,
+                             category=category,
+                             date=date,
+                             description=description)
 
 
 @app.route("/expenses/<int:id>/edit")

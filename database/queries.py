@@ -162,3 +162,75 @@ def get_category_breakdown(user_id, start_date=None, end_date=None):
         return breakdown
     finally:
         _close_db(conn)
+
+
+def create_expense(user_id, amount, category, date, description=None):
+    """
+    Create a new expense transaction for a user.
+    
+    Args:
+        user_id: The user's ID
+        amount: Expense amount (must be positive number)
+        category: Expense category (must be in predefined list)
+        date: Expense date in YYYY-MM-DD format
+        description: Optional description of the expense
+    
+    Returns:
+        int: The inserted expense ID
+    
+    Raises:
+        ValueError: If validation fails
+    """
+    # Define allowed categories
+    ALLOWED_CATEGORIES = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+    
+    # Validate amount
+    try:
+        amount_float = float(amount)
+        if amount_float <= 0:
+            raise ValueError("Amount must be a positive number")
+    except (ValueError, TypeError):
+        raise ValueError("Amount must be a positive number")
+    
+    # Validate category
+    if not category or category not in ALLOWED_CATEGORIES:
+        raise ValueError("Invalid category selected")
+    
+    # Validate date format and validity with bounds checking
+    try:
+        date_obj = datetime.strptime(date, '%Y-%m-%d')
+        # Validate date is within reasonable bounds (2000 to today)
+        min_date = datetime.strptime('2000-01-01', '%Y-%m-%d')
+        today = datetime.now()
+        if date_obj < min_date:
+            raise ValueError("Date cannot be before January 1, 2000")
+        if date_obj > today:
+            raise ValueError("Date cannot be in the future")
+    except ValueError as e:
+        if "Date cannot be" in str(e):
+            raise
+        raise ValueError("Invalid date format")
+    except TypeError:
+        raise ValueError("Invalid date format")
+    
+    # Insert expense into database
+    conn = get_db()
+    try:
+        conn.execute(
+            '''INSERT INTO expenses (user_id, amount, category, date, description)
+               VALUES (?, ?, ?, ?, ?)''',
+            (user_id, amount_float, category, date, description or None)
+        )
+        conn.commit()
+        
+        # Get the inserted expense ID
+        result = conn.execute(
+            'SELECT last_insert_rowid() as id'
+        ).fetchone()
+        expense_id = result['id']
+        
+        return expense_id
+    except Exception as e:
+        raise ValueError(f"Failed to create expense: {str(e)}")
+    finally:
+        _close_db(conn)
