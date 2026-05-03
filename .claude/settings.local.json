@@ -3,7 +3,10 @@
     "allow": [
       "Bash(uv sync *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "mcp__sqlite__list_tables",
+      "mcp__sqlite__describe_table",
+      "mcp__sqlite__read_query"
     ]
   }
 }
