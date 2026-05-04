@@ -6,6 +6,16 @@ This guide explains how to encrypt sensitive folders in your Git repositories so
 
 ---
 
+## ⚠️ CRITICAL SECURITY WARNING
+
+**NEVER include your actual encryption key in this guide or any public file!**
+- Your `.encryption.key` must NEVER be committed to GitHub
+- Your `.encryption.key` must NEVER be shared in documentation
+- Always use PLACEHOLDER examples (like `YOUR-SECRET-KEY-HERE`) in guides
+- Store your real key in a **password manager** (1Password, Bitwarden, LastPass)
+
+---
+
 ## Overview
 
 This project uses **Fernet symmetric encryption** (from Python's `cryptography` library) to protect the `docs/` folder. The entire folder is encrypted into a single `docs.tar.gz.encrypted` file, making it impossible for anyone without the key to see:
@@ -41,8 +51,8 @@ python encrypt_docs.py genkey
 
 **Output**:
 ```
-✅ Encryption key generated: C:\Users\farha\finlo\.encryption.key
-🔑 Key: 3-6P-Pp9octH_5ULmfhwinF4pFj54KeOMnuJq036bDE=
+✅ Encryption key generated: C:\Users\yourname\yourproject\.encryption.key
+🔑 Key: YOUR-SECRET-KEY-HERE-DO-NOT-SHARE (64 character string)
 ```
 
 ⚠️ **SAVE THIS KEY SAFELY** - You'll need it to decrypt on other machines.
@@ -310,7 +320,7 @@ git push
 
 For this project:
 1. ✅ Encryption setup complete
-2. ✅ Key generated: `3-6P-Pp9octH_5ULmfhwinF4pFj54KeOMnuJq036bDE=`
+2. ✅ Key generated: `YOUR-SECRET-KEY-HERE-DO-NOT-SHARE` (keep this safe!)
 3. ✅ Pushed to GitHub as `docs.tar.gz.encrypted`
 4. ⏭️ **For collaborators**: Share `.encryption.key` via secure channel
 5. ⏭️ **Regularly**: Encrypt before every push
