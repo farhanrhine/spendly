@@ -99,6 +99,51 @@ uv run app.py
 
 3. Open your browser and navigate to `http://localhost:5000`
 
+## Encrypted Docs Folder
+
+The `docs/` folder is **encrypted and stored as `docs.tar.gz.encrypted`** on GitHub. Only the encryption key holder can decrypt and read the contents.
+
+### Quick Workflow
+
+**To edit documentation:**
+
+```bash
+# 1. Re-encrypt (bundle your changes into archive)
+uv run archive_docs.py create
+
+# 2. Commit and push
+git add docs.tar.gz.encrypted
+git commit -m "Update docs"
+git push origin main
+```
+
+### First Time Setup (Fresh Clone)
+
+```bash
+# 1. Extract (decrypt docs folder)
+uv run archive_docs.py extract
+
+# 2. Edit files as needed
+nano docs/PLAN/note.md
+
+# 3. Re-encrypt when done
+uv run archive_docs.py create
+
+# 4. Push
+git add docs.tar.gz.encrypted
+git commit -m "Update docs"
+git push
+```
+
+**Important**: 
+- ✅ Always run `create` before pushing
+- ✅ Never commit the decrypted `docs/` folder
+- ❌ Don't forget to re-encrypt!
+
+For comprehensive encryption guide, see [ENCRYPTION_GUIDE.md](ENCRYPTION_GUIDE.md).
+
+---
+
 ## Development Notes
 
 - The project follows a single-file Flask approach (all routes in `app.py`, no blueprints)
