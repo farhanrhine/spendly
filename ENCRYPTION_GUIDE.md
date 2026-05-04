@@ -13,8 +13,6 @@ This guide explains how to encrypt sensitive folders in your Git repositories so
 - Your `.encryption.key` must NEVER be shared in documentation
 - Always use PLACEHOLDER examples (like `YOUR-SECRET-KEY-HERE`) in guides
 - Store your real key in a **password manager** (1Password, Bitwarden, LastPass)
-- # The new key is already in .encryption.key
-`cat .encryption.key`
 
 ---
 
@@ -132,6 +130,154 @@ git add docs.tar.gz.encrypted
 git commit -m "Update encrypted docs"
 git push
 ```
+
+---
+
+## Simple Daily Workflow
+
+### **5-Step Process Every Time You Edit:**
+
+```bash
+# 1️⃣ Extract (decrypt)
+uv run archive_docs.py extract
+
+# 2️⃣ Edit files
+# Open and edit docs/PLAN/note.md (or any file)
+
+# 3️⃣ Save changes
+# Just save normally in your editor (Ctrl+S)
+
+# 4️⃣ Re-encrypt
+uv run archive_docs.py create
+
+# 5️⃣ Push to GitHub
+git add docs.tar.gz.encrypted
+git commit -m "Update docs"
+git push
+```
+
+---
+
+## Common Changes: What Happens?
+
+### **Case 1: Delete a File from docs/**
+```bash
+# 1. Extract
+uv run archive_docs.py extract
+
+# 2. Delete the file
+rm docs/PLAN/note.md
+
+# 3. Re-encrypt (captures deletion)
+uv run archive_docs.py create
+
+# 4. Push
+git add docs.tar.gz.encrypted
+git commit -m "Remove old note.md"
+git push
+# ✅ Works perfectly!
+```
+
+### **Case 2: Add a New File to docs/**
+```bash
+# 1. Extract
+uv run archive_docs.py extract
+
+# 2. Create new file
+echo "New content" > docs/PLAN/new-plan.md
+
+# 3. Re-encrypt (captures new file)
+uv run archive_docs.py create
+
+# 4. Push
+git add docs.tar.gz.encrypted
+git commit -m "Add new-plan.md"
+git push
+# ✅ Works perfectly!
+```
+
+### **Case 3: Edit Existing File (Multiple Changes)**
+```bash
+# 1. Extract
+uv run archive_docs.py extract
+
+# 2. Make multiple changes
+# - Delete: docs/pdf/old.pdf
+# - Edit: docs/basic/flask.md
+# - Add: docs/idea/new-concept.md
+
+# 3. Re-encrypt (captures all changes)
+uv run archive_docs.py create
+
+# 4. Push
+git add docs.tar.gz.encrypted
+git commit -m "Update docs: delete old PDF, edit flask guide, add new concept"
+git push
+# ✅ All changes encrypted and pushed!
+```
+
+### **⚠️ What NOT to Do:**
+```bash
+# ❌ DON'T delete docs/ folder manually
+rm -rf docs/
+uv run archive_docs.py create
+# ERROR: docs/ directory not found!
+
+# ✅ CORRECT: Always extract first
+uv run archive_docs.py extract
+# Now you can delete/edit/add files
+```
+
+---
+
+## Recovery: Laptop Broken?
+
+**Don't worry! Your docs are safe on GitHub!**
+
+### **Recovery Steps (New Laptop):**
+
+```bash
+# 1. Clone repo
+git clone https://github.com/yourname/finlo.git
+cd finlo
+
+# 2. Copy your encryption key
+# From password manager or backup:
+cp /backup/location/.encryption.key .
+
+# 3. Extract and decrypt
+uv run archive_docs.py extract
+
+# 4. Done! ✅ Full docs/ folder is restored
+ls docs/
+# All your files are back!
+```
+
+### **Why This Works:**
+
+| Backup Location | Status | Contains |
+|-----------------|--------|----------|
+| GitHub (docs.tar.gz.encrypted) | ✅ Public, Safe | 100% of your docs (encrypted) |
+| Your Encryption Key | ✅ Secure backup | Decryption key |
+| Combined | ✅ Unbreakable | Complete recovery possible |
+
+**If you have both, you can recover everything!** 🔒
+
+---
+
+## Key Backup Checklist
+
+### **Store Your Key In:**
+- ✅ Password Manager (1Password, Bitwarden, LastPass) - REQUIRED
+- ✅ USB Drive (encrypted, in safe location) - RECOMMENDED
+- ✅ Cloud Backup (Google Drive, OneDrive, encrypted) - OPTIONAL
+
+### **Never Store Key In:**
+- ❌ GitHub or any Git repo
+- ❌ Plain text files
+- ❌ Email
+- ❌ Slack or Discord
+- ❌ Unencrypted cloud storage
 
 ---
 
@@ -322,10 +468,11 @@ git push
 
 For this project:
 1. ✅ Encryption setup complete
-2. ✅ Key generated: `YOUR-SECRET-KEY-HERE-DO-NOT-SHARE` (keep this safe!)
+2. ✅ Key generated and saved (check with `cat .encryption.key`)
 3. ✅ Pushed to GitHub as `docs.tar.gz.encrypted`
-4. ⏭️ **For collaborators**: Share `.encryption.key` via secure channel
-5. ⏭️ **Regularly**: Encrypt before every push
+4. ✅ Follow the **Simple Daily Workflow** above for any edits
+5. ⏭️ **For collaborators**: Share `.encryption.key` via password manager
+6. ⏭️ **Backup**: Store key in multiple secure locations
 
 ---
 
