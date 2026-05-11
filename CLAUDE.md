@@ -109,8 +109,8 @@ uv run app.py
 # Stage all changes (use cautiously with large modifications)
 git add .
 
-# Commit changes with Claude and Pi as co-authors (recommended)
-git commit -m $'your message\n\nCo-Authored-By: Claude <claude@anthropic.com>\nCo-Authored-By: pi-mono <pi-mono@noreply.github.com>'
+# Commit changes with Claude and Earendil Works (Pi) as co-authors (recommended)
+git commit -m $'your message\n\nCo-Authored-By: Claude <claude@anthropic.com>\nCo-Authored-By: Earendil Works <earendil-works@noreply.github.com>'
 
 # Push to feature branch
 git push origin feature/<branch_name>
