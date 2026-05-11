@@ -110,7 +110,7 @@ uv run app.py
 git add .
 
 # Commit changes with Claude and Pi as co-authors (recommended)
-git commit -m $'your message\n\nCo-Authored-By: Claude <claude@anthropic.com>\nCo-Authored-By: Pi <noreply@pi.dev>'
+git commit -m $'your message\n\nCo-Authored-By: Claude <claude@anthropic.com>\nCo-Authored-By: pi-mono <pi-mono@noreply.github.com>'
 
 # Push to feature branch
 git push origin feature/<branch_name>
