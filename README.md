@@ -1,10 +1,10 @@
 ⚠️ **WARNING: This project is under development and not ready for production use.**
 
-> **Note**: This project is developed collaboratively by a human creator(me) and Claude Code, combining strategic thinking with AI-assisted implementation. It's not vibe-coding, it's Spec-Driven Development.
+> **Note**: This project is developed collaboratively by a human creator (Farhan) and AI assistants (Claude Code & Pi), combining strategic thinking with AI-assisted implementation. It's not vibe-coding, it's Spec-Driven Development.
 
 | | |
 |---|---|
-| **Finlo- development Team** | [<img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" style="border-radius: 50%;" />](https://github.com/farhanrhine) [<img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" />](https://claude.com/product/claude-code) |
+| **Finlo Development Team** | [<img src="https://avatars.githubusercontent.com/u/124152754?v=4&s=100" width="100" height="100" style="border-radius: 50%;" />](https://github.com/farhanrhine) Farhan | [<img src="https://www.scriptbyai.com/wp-content/uploads/2025/06/claude-code.png" width="100" height="100" />](https://claude.com/product/claude-code) Claude Code | [<img src="https://pi.dev/logo.svg" width="100" height="100" style="border-radius: 50%;" />](https://pi.dev) Pi |
 
 ---
 
