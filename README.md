@@ -23,9 +23,10 @@ A personal expense tracking application built with Flask.
 - Step 5: Connect profile page to database
 - Step 6: Data filter for profile page (including security hardening & quick filters)
 - Step 7: Add new expenses feature (fully implemented, tested, and security hardened)
+- Step 8: Edit expenses feature (fully implemented, 39 tests created, manual testing verified)
 
 **In Progress:**
-- Step 8: Edit and delete expenses (Planning Phase)
+- Step 9: Delete expenses feature (Planning Phase)
 
 ## Tech Stack
 
@@ -54,7 +55,7 @@ finlo/
 │   ├── db.py               # SQLite helpers and database operations
 │   └── queries.py          # Reusable database query functions
 ├── templates/              # Jinja2 HTML templates
-│   ├── add_expense.html    # Add new expense form
+│   ├── add_expense.html    # Add/Edit expense form (dual-mode via Jinja2 conditionals)
 │   ├── base.html           # Master layout template (base for all pages)
 │   ├── landing.html        # Homepage
 │   ├── login.html          # User login page
