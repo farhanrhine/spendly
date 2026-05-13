@@ -1,8 +1,8 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, abort
 from datetime import datetime
 from database.db import get_db, init_db, seed_db, create_user, validate_user, get_user_by_id
-from database.queries import get_user_by_id as get_user_details, get_summary_stats, get_recent_transactions, get_category_breakdown, create_expense
+from database.queries import get_user_by_id as get_user_details, get_summary_stats, get_recent_transactions, get_category_breakdown, create_expense, get_expense_by_id, update_expense
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
@@ -297,7 +297,101 @@ def add_expense_post():
 
 @app.route("/expenses/<int:id>/edit")
 def edit_expense(id):
-    return "Edit expense — coming in Step 8"
+    """
+    Display the expense edit form pre-populated with current data.
+    Only accessible to authenticated users who own the expense.
+    """
+    # Authentication guard
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    
+    # Fetch expense with ownership check
+    expense = get_expense_by_id(user_id, id)
+    if not expense:
+        abort(404)
+    
+    # Ensure CSRF token exists
+    import secrets
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)
+    csrf_token = session.get('csrf_token')
+    
+    # Categories list
+    categories = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+    
+    # Render form with pre-populated data
+    return render_template('add_expense.html',
+                         expense=expense,
+                         categories=categories,
+                         csrf_token=csrf_token)
+
+
+@app.route("/expenses/<int:id>/edit", methods=["POST"])
+def edit_expense_post(id):
+    """
+    Handle expense edit form submission.
+    Validates inputs, updates expense, and redirects to profile.
+    """
+    # Authentication guard
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    
+    # CSRF token validation
+    csrf_token = request.form.get('csrf_token', '')
+    session_token = session.get('csrf_token', '')
+    if not csrf_token or csrf_token != session_token:
+        expense = get_expense_by_id(user_id, id)
+        if not expense:
+            abort(404)
+        categories = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+        return render_template('add_expense.html',
+                             expense=expense,
+                             categories=categories,
+                             error='Security token expired. Please refresh and try again.')
+    
+    # Extract form data
+    amount = request.form.get('amount', '').strip()
+    category = request.form.get('category', '').strip()
+    date = request.form.get('date', '').strip()
+    description = request.form.get('description', '').strip()
+    
+    # Categories list for re-rendering on error
+    categories = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+    
+    # Validate amount is convertible to float
+    try:
+        float(amount)
+    except ValueError:
+        expense = get_expense_by_id(user_id, id)
+        if not expense:
+            abort(404)
+        return render_template('add_expense.html',
+                             expense=expense,
+                             categories=categories,
+                             error='Amount must be a valid number',
+                             amount=amount,
+                             category=category,
+                             date=date,
+                             description=description)
+    
+    # Try to update the expense
+    try:
+        expense_id = update_expense(user_id, id, amount, category, date, description)
+        return redirect(url_for('profile'))
+    except ValueError as e:
+        expense = get_expense_by_id(user_id, id)
+        if not expense:
+            abort(404)
+        return render_template('add_expense.html',
+                             expense=expense,
+                             categories=categories,
+                             error=str(e),
+                             amount=amount,
+                             category=category,
+                             date=date,
+                             description=description)
 
 
 @app.route("/expenses/<int:id>/delete")
