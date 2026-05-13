@@ -234,3 +234,104 @@ def create_expense(user_id, amount, category, date, description=None):
         raise ValueError(f"Failed to create expense: {str(e)}")
     finally:
         _close_db(conn)
+
+
+def get_expense_by_id(user_id, expense_id):
+    """
+    Fetch a single expense by ID with ownership validation.
+    
+    Args:
+        user_id: Authenticated user's ID
+        expense_id: Expense ID to fetch
+    
+    Returns:
+        dict with keys: id, user_id, amount, category, date, description, created_at
+        OR None if not found or user doesn't own it
+    """
+    conn = get_db()
+    try:
+        result = conn.execute(
+            'SELECT id, user_id, amount, category, date, description, created_at FROM expenses WHERE id = ? AND user_id = ?',
+            (expense_id, user_id)
+        ).fetchone()
+        return dict(result) if result else None
+    finally:
+        _close_db(conn)
+
+
+def update_expense(user_id, expense_id, amount, category, date, description=None):
+    """
+    Update an existing expense with validation and ownership check.
+    
+    Args:
+        user_id: Authenticated user's ID (for ownership check)
+        expense_id: Expense ID to update
+        amount: New amount (must be positive)
+        category: New category (must be in allowed list)
+        date: New date (YYYY-MM-DD format)
+        description: New description (optional)
+    
+    Returns:
+        int: The updated expense_id
+    
+    Raises:
+        ValueError: If validation fails or user doesn't own the expense
+    """
+    # Define allowed categories
+    ALLOWED_CATEGORIES = ['Food', 'Transport', 'Bills', 'Health', 'Entertainment', 'Other']
+    
+    # Validate amount
+    try:
+        amount_float = float(amount)
+        if amount_float <= 0:
+            raise ValueError("Amount must be a positive number")
+    except (ValueError, TypeError):
+        raise ValueError("Amount must be a positive number")
+    
+    # Validate category
+    if not category or category not in ALLOWED_CATEGORIES:
+        raise ValueError("Invalid category selected")
+    
+    # Validate date format and validity with bounds checking
+    try:
+        date_obj = datetime.strptime(date, '%Y-%m-%d')
+        # Validate date is within reasonable bounds (2000 to today)
+        min_date = datetime.strptime('2000-01-01', '%Y-%m-%d')
+        today = datetime.now()
+        if date_obj < min_date:
+            raise ValueError("Date cannot be before January 1, 2000")
+        if date_obj > today:
+            raise ValueError("Date cannot be in the future")
+    except ValueError as e:
+        if "Date cannot be" in str(e):
+            raise
+        raise ValueError("Invalid date format")
+    except TypeError:
+        raise ValueError("Invalid date format")
+    
+    # Check ownership before updating
+    conn = get_db()
+    try:
+        # Verify expense exists and belongs to user
+        ownership_check = conn.execute(
+            'SELECT id FROM expenses WHERE id = ? AND user_id = ?',
+            (expense_id, user_id)
+        ).fetchone()
+        
+        if not ownership_check:
+            raise ValueError("Expense not found or access denied")
+        
+        # Update the expense
+        conn.execute(
+            '''UPDATE expenses SET amount = ?, category = ?, date = ?, description = ? WHERE id = ? AND user_id = ?''',
+            (amount_float, category, date, description or None, expense_id, user_id)
+        )
+        conn.commit()
+        
+        return expense_id
+    except ValueError:
+        raise
+    except Exception as e:
+        raise ValueError(f"Failed to update expense: {str(e)}")
+    finally:
+        _close_db(conn)
